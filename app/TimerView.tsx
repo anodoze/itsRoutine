@@ -1,4 +1,4 @@
-const testTimers: Timer[] = [
+export const testTimers: Timer[] = [
   {
     id: 't1',
     name: 'Stretch',
@@ -13,7 +13,7 @@ const testTimers: Timer[] = [
   }
 ];
 
-const testRoutine: Routine = {
+export const testRoutine: Routine = {
   id: 'r1',
   name: 'Quick Warmup',
   startTime: null,
@@ -32,7 +32,7 @@ interface TimerViewProps {
     routine: Routine;
 }
 
-function TimerView({routine}: TimerViewProps){
+export default function TimerView({routine}: TimerViewProps){
     const [index, setIndex] = useState(0);
     const [seconds, setSeconds] = useState(0);
     const [paused, setPaused] = useState(true);
