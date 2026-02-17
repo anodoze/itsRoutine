@@ -2,13 +2,13 @@ export const testTimers: Timer[] = [
   {
     id: 't1',
     name: 'Stretch',
-    durationSeconds: 30,
+    durationSeconds: 5,
     isActive: true
   },
   {
     id: 't2', 
     name: 'Push-ups',
-    durationSeconds: 45,
+    durationSeconds: 30,
     isActive: true
   }
 ];
@@ -38,38 +38,37 @@ export default function TimerView({routine}: TimerViewProps){
     const [paused, setPaused] = useState(true);
     
     const item = routine.items[index];
-    if (!item || item.type !== 'timer') return <Text>Done!</Text>;
-
     const timer = testTimers.find(t => t.id === item?.timerId);
-
+    
+    
+    useEffect(() => {
+      if (timer && seconds === 0 && paused ) {
+        setSeconds(timer.durationSeconds);
+      }
+    }, [timer, paused]);
+    
+    useEffect(() => {
+      if (paused || seconds === 0) return;
+      
+      const tick = setInterval(() => {
+        setSeconds(s => {
+          if (s <= 1) {
+            setIndex(i => i + 1);
+            setPaused(true);
+            return 0;
+          }
+          return s-1
+        });
+      }, 1000)
+      
+      return () => clearInterval(tick);
+    }, [paused, seconds]);
+    
+    if (!item || item.type !== 'timer') return <Text>Done!</Text>;
+    
     const nextItem = routine.items[index + 1];
     if (!nextItem || nextItem.type !== 'timer') return <Text>Done!</Text>;
-    
     const nextTimer = nextItem && testTimers.find( t => t.id === nextItem.timerId);
-
-    useEffect(() => {
-        if (timer && seconds === 0 && paused ) {
-            setSeconds(timer.durationSeconds);
-        }
-    }, [timer, paused]);
-
-    useEffect(() => {
-        if (paused || seconds === 0) return;
-
-        const tick = setInterval(() => {
-            setSeconds(s => {
-                if (s <= 1) {
-                    setIndex(i => i + 1);
-                    setPaused(true);
-                    return 0;
-                }
-                return s-1
-            });
-        }, 1000)
-
-        return () => clearInterval(tick);
-    }, [paused, seconds]);
-
     if (!timer) return <Text>Done!</Text>;
 
     return (
