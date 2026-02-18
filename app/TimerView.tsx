@@ -1,17 +1,39 @@
+import { View, Text, Button, StyleSheet } from 'react-native';
+import { Timer, Routine, Registry } from './types';
+import { useRoutineRunner } from './hooks/use-routine-runner';
+
 export const testTimers: Timer[] = [
   {
     id: 't1',
     name: 'Stretch',
-    durationSeconds: 5,
+    durationSeconds: 3,
     isActive: true
   },
   {
     id: 't2', 
     name: 'Push-ups',
-    durationSeconds: 30,
+    durationSeconds: 10,
+    isActive: true
+  },
+  {
+    id: 't3', 
+    name: 'jump',
+    durationSeconds: 1,
     isActive: true
   }
 ];
+
+export const nestedRoutine: Routine = {
+  id: 'r2',
+  name: 'Cooldown',
+  startTime: null,
+  items: [
+    { type: 'timer', timerId: 't3' },
+    { type: 'timer', timerId: 't2' },
+    { type: 'timer', timerId: 't3' }
+  ],
+  isScheduled: false
+}
 
 export const testRoutine: Routine = {
   id: 'r1',
@@ -19,69 +41,52 @@ export const testRoutine: Routine = {
   startTime: null,
   items: [
     { type: 'timer', timerId: 't1' },
+    { type: 'routine', routineId: 'r2' },
     { type: 'timer', timerId: 't2' }
   ],
   isScheduled: false
 };
 
-import { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { Timer, Routine } from './types'
+const testRegistry: Registry = {
+  timers: Object.fromEntries(testTimers.map(t => [t.id, t])),
+  routines: { 
+    [testRoutine.id]: testRoutine,
+    [nestedRoutine.id]: nestedRoutine
+   }
+};
 
 interface TimerViewProps {
-    routine: Routine;
+  routine: Routine;
 }
 
-export default function TimerView({routine}: TimerViewProps){
-    const [index, setIndex] = useState(0);
-    const [seconds, setSeconds] = useState(0);
-    const [paused, setPaused] = useState(true);
-    
-    const item = routine.items[index];
-    const timer = testTimers.find(t => t.id === item?.timerId);
-    
-    
-    useEffect(() => {
-      if (timer && seconds === 0 && paused ) {
-        setSeconds(timer.durationSeconds);
-      }
-    }, [timer, paused]);
-    
-    useEffect(() => {
-      if (paused || seconds === 0) return;
-      
-      const tick = setInterval(() => {
-        setSeconds(s => {
-          if (s <= 1) {
-            setIndex(i => i + 1);
-            setPaused(true);
-            return 0;
-          }
-          return s-1
-        });
-      }, 1000)
-      
-      return () => clearInterval(tick);
-    }, [paused, seconds]);
-    
-    if (!item || item.type !== 'timer') return <Text>Done!</Text>;
-    
-    const nextItem = routine.items[index + 1];
-    if (!nextItem || nextItem.type !== 'timer') return <Text>Done!</Text>;
-    const nextTimer = nextItem && testTimers.find( t => t.id === nextItem.timerId);
-    if (!timer) return <Text>Done!</Text>;
+export default function TimerView({ routine }: TimerViewProps) {
+  const { currentTimer, secondsLeft, isPaused, isDone, pause, resume, skip } = 
+    useRoutineRunner(routine, testRegistry);
 
+  if (!currentTimer || isDone) {
     return (
-        <View style={styles.container}>
-            <Text style={styles.name}>{timer.name}</Text>
-            <Text style={styles.timer}>{seconds}</Text>
-            { nextTimer && <Text>Next: {nextTimer.name}</Text>}
-            <Button 
-                title={paused ? 'Start' : 'Pause'}
-                onPress={() => setPaused(!paused)}
-            />
-        </View>
-    )
+      <View style={styles.container}>
+        <Text style={styles.name}>Done!</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.name}>{currentTimer.name}</Text>
+      {secondsLeft !== null && (
+        <Text style={styles.timer}>{secondsLeft}</Text>
+      )}
+      <Button 
+        title={isPaused ? 'Start' : 'Pause'}
+        onPress={() => isPaused ? resume() : pause()}
+      />
+      <Button 
+        title="Skip"
+        onPress={skip}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

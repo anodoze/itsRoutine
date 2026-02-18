@@ -1,8 +1,7 @@
-// types.ts
 export interface Timer {
   id: string;
   name: string;
-  durationSeconds: number;
+  durationSeconds?: number;
   isActive: boolean;
 }
 
@@ -17,3 +16,8 @@ export interface Routine {
 export type RoutineItem = 
   | { type: 'timer'; timerId: string }
   | { type: 'routine'; routineId: string };
+
+export type Registry = {
+  timers: Record<string, Timer>;
+  routines: Record<string, Routine>;
+};

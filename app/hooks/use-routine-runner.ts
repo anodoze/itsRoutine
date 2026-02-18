@@ -1,66 +1,113 @@
-// import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Timer, Routine, Registry } from "../types";
 
-// type Position = {
-//   routineId: string;
-//   itemIndex: number;
-// };
+type Position = {
+  routineId: string;
+  itemIndex: number;
+};
 
-// function useRoutineRunner(rootRoutine: Routine) {
-//   const [stack, setStack] = useState<Position[]>([
-//     { routineId: rootRoutine.id, itemIndex: 0 }
-//   ]);
-//   const [timeRemaining, setTimeRemaining] = useState(0);
-//   const [isPaused, setIsPaused] = useState(false);
+function resolveCurrentTimer(
+  stack: Position[],
+  registry: Registry
+): Timer | null {
+  if (stack.length === 0) return null;
+  const top = stack[stack.length - 1];
+  const routine = registry.routines[top.routineId];
+  if (!routine) return null;
+  const item = routine.items[top.itemIndex];
+  if (!item || item.type !== "timer") return null;
+  return registry.timers[item.timerId] ?? null;
+}
 
-//   // Get current item by walking the stack
-//   const currentItem = useMemo(() => {
-//     let routine = rootRoutine;
-//     for (let pos of stack) {
-//       const item = routine.items[pos.itemIndex];
-//       if (!item) return null;
-      
-//       if (item.type === 'routine') {
-//         routine = allRoutines[item.routineId];
-//       } else {
-//         return allTimers[item.timerId];
-//       }
-//     }
-//     return null;
-//   }, [stack]);
+export function useRoutineRunner(root: Routine, registry: Registry) {
+  const [stack, setStack] = useState<Position[]>([
+    { routineId: root.id, itemIndex: 0 },
+  ]);
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(true);
+  const [isDone, setIsDone] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
-//   const advance = () => {
-//     const current = stack[stack.length - 1];
-//     const routine = getRoutineAtStack(stack);
-//     const nextIndex = current.itemIndex + 1;
+  const currentTimer = useMemo(
+    () => resolveCurrentTimer(stack, registry),
+    [stack, registry]
+  );
 
-//     if (nextIndex < routine.items.length) {
-//       const nextItem = routine.items[nextIndex];
-      
-//       if (nextItem.type === 'routine') {
-//         // Dive into subroutine
-//         setStack([...stack, { 
-//           routineId: nextItem.routineId, 
-//           itemIndex: 0 
-//         }]);
-//       } else {
-//         // Next timer in current routine
-//         setStack([...stack.slice(0, -1), 
-//           { ...current, itemIndex: nextIndex }
-//         ]);
-//       }
-//     } else {
-//       // Pop up a level
-//       setStack(s => {
-//         const popped = s.slice(0, -1);
-//         if (popped.length === 0) return s; // done
-//         // Advance parent routine
-//         const parent = popped[popped.length - 1];
-//         return [...popped.slice(0, -1), 
-//           { ...parent, itemIndex: parent.itemIndex + 1 }
-//         ];
-//       });
-//     }
-//   };
+  // Initialise secondsLeft when the current timer changes
+  useEffect(() => {
+    if (currentTimer) {
+      setSecondsLeft(currentTimer.durationSeconds ?? null);
+        if (!hasStarted) setIsPaused(true);
+    }
+  }, [currentTimer?.id]);
 
-//   // ... interval logic calls advance() when timer hits 0
-// }
+  const advance = useCallback(
+    (currentStack: Position[]): Position[] | "done" => {
+      let s = [...currentStack];
+
+      while (s.length > 0) {
+        const top = s[s.length - 1];
+        const routine = registry.routines[top.routineId];
+        const nextIndex = top.itemIndex + 1;
+
+        if (nextIndex < routine.items.length) {
+          s = [...s.slice(0, -1), { ...top, itemIndex: nextIndex }];
+        } else {
+          s = s.slice(0, -1);
+          continue;
+        }
+
+        const nextItem = routine.items[nextIndex];
+        if (nextItem.type === "timer") return s;
+        if (nextItem.type === "routine") {
+          s = [...s, { routineId: nextItem.routineId, itemIndex: -1 }];
+          // loop will advance to index 0
+        }
+      }
+
+      return "done";
+    },
+    [registry]
+  );
+
+  const skip = useCallback(() => {
+    setStack((current) => {
+      const next = advance(current);
+      if (next === "done") {
+        setIsDone(true);
+        return current;
+      }
+      return next;
+    });
+  }, [advance]);
+
+  // Countdown interval
+  useEffect(() => {
+    if (isPaused || isDone || secondsLeft === null) return;
+
+    const tick = setInterval(() => {
+      setSecondsLeft((s) => {
+        if (s === null || s <= 1) {
+          skip();
+          return null;
+        }
+        return s - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(tick);
+  }, [isPaused, isDone, secondsLeft === null, skip]);
+
+  return {
+    currentTimer,
+    secondsLeft,
+    isPaused,
+    isDone,
+    pause: () => setIsPaused(true),
+    resume: () => {    
+        setIsPaused(false);
+        setHasStarted(true);
+    },
+    skip,
+  };
+}
