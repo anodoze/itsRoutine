@@ -4,6 +4,9 @@ import TimerView from "./TimerView";
 import { useRegistry } from "./RegistryContext";
 import { createSeedData } from "./Seed";
 
+import { useRouter } from 'expo-router';
+const router = useRouter();
+
 export default function Index() {
   const { registry, loading, seedRegistry } = useRegistry();
 
@@ -32,6 +35,7 @@ export default function Index() {
     <View style={styles.container}>
       <TimerView routine={containerRoutine} />
       <Button title="Reset Data" onPress={handleReset} />
+      <Button title="manage" onPress={() => router.push('/manage')} />
     </View>
   );
 }

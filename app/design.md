@@ -35,3 +35,36 @@ Goal: help to create and maintain daily habits with gentle alarms, reminders, an
 - Routines can be at a fixed time daily (such as a morning routine) or a collection that can be started at any time (such as a midday stretch)
 - Routines can nest - such as a workout routine within a morning routine. 
 - The app should handle regular intervals such as every other day, once every 2 weeks, Monday/Wednesday/Friday, or "weekends only"
+
+#Technical Architecture
+
+##State Management
+- `RegistryContext` provides global access to timers and routines via `useRegistry()` hook
+- All data persists to AsyncStorage automatically on changes
+- CRUD operations are atomic - deletes cascade to remove references from parent routines
+
+##Key Files
+- `types.ts` - Core data structures (Timer, Routine, Registry)
+- `RegistryContext.tsx` - Global state provider, CRUD operations, persistence
+- `storage.ts` - AsyncStorage read/write helpers
+- `hooks/use-routine-runner.ts` - State machine for executing routines with nesting support
+- `seed.ts` - Dev data for testing (call `seedRegistry()` to reset)
+
+##Routine Execution Model
+The runner hook uses a stack-based traversal to handle nested routines:
+- Stack of `{routineId, itemIndex}` positions tracks current location
+- `advance()` function steps through items, diving into sub-routines automatically
+- Always resolves to a leaf `Timer` or marks completion as `isDone`
+- First timer waits for user to press Start; subsequent timers auto-advance
+- Timers without `durationSeconds` stay active until manually skipped
+
+##Data Flow
+1. App loads → `RegistryProvider` reads from AsyncStorage
+2. Components use `useRegistry()` to access/modify data
+3. Any registry change → auto-saves to AsyncStorage
+4. `TimerView` gets routine + registry → `useRoutineRunner` executes it
+
+##Current Limitations
+- Delete confirmations are stubbed (auto-confirm, just log warnings)
+- No debouncing on AsyncStorage writes (saves on every mutation)
+- No validation on routine item references (will crash if timer/routine missing from registry)

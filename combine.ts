@@ -2,12 +2,14 @@ import * as fs from "fs";
 import * as path from "path";
 
 const files = [
-  "app/design.md",
-  "app/_layout.tsx",
-  "app/index.tsx",
-  "app/TimerView.tsx",
-  "app/types.ts",
-  "app/hooks/use-routine-runner.ts"
+  // "app/design.md",
+  // "app/_layout.tsx",
+  // "app/index.tsx",
+  // "app/TimerView.tsx",
+  // "app/types.ts",
+  // "app/hooks/use-routine-runner.ts",
+  "app/RegistryContext.tsx",
+  "app/Storage.ts"
 ];
 
 const workingDir = process.cwd();
