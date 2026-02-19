@@ -1,31 +1,29 @@
-// app/components/manage/TimerCollapsedView.tsx
+// app/components/manage/RoutineCollapsedView.tsx
 import { Pressable, View, Text, StyleSheet } from 'react-native';
-import { Timer } from '../types';
-import { formatDuration } from '../utils';
+import { Routine } from '../types';
 import { layout, typography, colors } from '../theme'
 
 interface Props {
-  timer: Timer;
+  routine: Routine;
   onExpand: () => void;
 }
 
-export default function TimerCollapsedView({ timer, onExpand }: Props) {
+export default function RoutineCollapsedView({ routine, onExpand }: Props) {
+  const itemCount = routine.items.length;
   return (
     <Pressable onPress={onExpand} style={styles.card}>
       <View style={styles.row}>
-        <Text style={styles.name}>{timer.name}</Text>
+        <Text style={styles.name}>{routine.name}</Text>
         <View style={styles.right}>
-        <Text style={styles.meta}>
-          {timer.durationSeconds ? formatDuration(timer.durationSeconds) : 'No duration'}
-        </Text>
-        <Text style={styles.chevron}>▶</Text>
+         <Text style={styles.meta}>{itemCount} {itemCount === 1 ? 'item' : 'items'}</Text>
+         <Text style={styles.chevron}>▶</Text>
         </View>
       </View>
     </Pressable>
   );
 }
 
-// TimerCollapsedView
+// RoutineCollapsedView
 const styles = StyleSheet.create({
   card: { ...layout.card, backgroundColor: colors.card },
   row: { ...layout.row, justifyContent: 'space-between' },

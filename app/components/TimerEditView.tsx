@@ -4,6 +4,7 @@ import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
 import { Timer } from '../types';
 import { formatDuration } from '../utils';
 import DurationInput from './DurationInput';
+import { layout, typography, colors } from '../theme'
 
 type EditingField = 'name' | 'duration' | null;
 
@@ -22,27 +23,34 @@ export default function TimerEditView({ timer, onUpdate, onCollapse, onDelete }:
 
   return (
     <View style={styles.card}>
-      {/* Name */}
-      <Pressable onPress={editingField === null ? onCollapse : stopEditing}
-        style={[styles.field, editingField === 'name' && styles.fieldActive]}>
-        {editingField === 'name' ? (
-          <TextInput
-            autoFocus
-            value={timer.name}
-            onChangeText={val => onUpdate({ name: val })}
-            onBlur={stopEditing}
-            style={styles.nameInput}
-          />
-        ) : (
-          <Pressable onPress={edit('name')}>
+      {/* Header row */}
+      <View style={styles.headerRow}>
+        <Pressable
+          onPress={editingField === 'name' ? stopEditing : edit('name')}
+          style={[styles.nameField, editingField === 'name' && styles.fieldActive]}
+        >
+          {editingField === 'name' ? (
+            <TextInput
+              autoFocus
+              value={timer.name}
+              onChangeText={val => onUpdate({ name: val })}
+              onBlur={stopEditing}
+              style={styles.nameInput}
+            />
+          ) : (
             <Text style={styles.name}>{timer.name}</Text>
-          </Pressable>
-        )}
-      </Pressable>
+          )}
+        </Pressable>
+        <Pressable onPress={onCollapse} style={styles.chevronBtn}>
+          <Text style={styles.chevron}>▼</Text>
+        </Pressable>
+      </View>
 
       {/* Duration */}
-      <Pressable onPress={edit('duration')}
-        style={[styles.field, editingField === 'duration' && styles.fieldActive]}>
+      <Pressable
+        onPress={edit('duration')}
+        style={[styles.field, editingField === 'duration' && styles.fieldActive]}
+      >
         {editingField === 'duration' ? (
           <DurationInput
             value={timer.durationSeconds ?? 0}
@@ -63,12 +71,16 @@ export default function TimerEditView({ timer, onUpdate, onCollapse, onDelete }:
 }
 
 const styles = StyleSheet.create({
-  card: { margin: 8, padding: 12, borderRadius: 8, backgroundColor: '#f5f5f5' },
-  field: { padding: 8, borderRadius: 6 },
-  fieldActive: { backgroundColor: '#e8f0fe', borderWidth: 1, borderColor: '#4a90e2' },
-  name: { fontSize: 18, fontWeight: 'bold' },
-  nameInput: { fontSize: 18, fontWeight: 'bold' },
-  fieldValue: { fontSize: 16, color: '#444' },
+  card: { ...layout.card, backgroundColor: colors.card },
+  headerRow: { ...layout.row, justifyContent: 'space-between' },
+  nameField: { ...layout.field, flex: 1 },
+  fieldActive: { backgroundColor: colors.activeFieldBg, borderWidth: 1, borderColor: colors.activeFieldBorder },
+  name: { ...typography.heading },
+  nameInput: { ...typography.heading },
+  field: { ...layout.field, marginTop: 4 },
+  fieldValue: { ...typography.label },
+  chevronBtn: { padding: 8 },
+  chevron: { fontSize: 16, color: colors.textMuted },
   deleteBtn: { marginTop: 8, padding: 8 },
-  deleteLabel: { color: 'red' },
+  deleteLabel: { color: colors.danger },
 });

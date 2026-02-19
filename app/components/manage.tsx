@@ -1,17 +1,20 @@
 // app/manage.tsx
 import { useState } from 'react';
 import { View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
-import { useRegistry } from './RegistryContext';
-import TimerListItem from './components/TimerListItem';
+import { useRegistry } from '../RegistryContext';
+import TimerListItem from './TimerListItem';
+import RoutineListItem from './RoutineListItem';
+
 
 type Tab = 'routines' | 'timers' | 'tasks';
 
 export default function ManageScreen() {
-  const { registry, addTimer } = useRegistry();
+  const { registry, addTimer, addRoutine } = useRegistry();
   const [tab, setTab] = useState<Tab>('timers');
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const timers = Object.values(registry.timers);
+  const routines = Object.values(registry.routines);
 
   return (
     <View style={styles.container}>
@@ -24,6 +27,27 @@ export default function ManageScreen() {
           </Pressable>
         ))}
       </View>
+        {tab === 'routines' && (
+        <FlatList
+            data={routines}
+            keyExtractor={r => r.id}
+            renderItem={({ item }) => (
+            <RoutineListItem
+                routine={item}
+                isExpanded={expandedId === item.id}
+                onExpand={() => setExpandedId(prev => prev === item.id ? null : item.id)}
+            />
+            )}
+        />
+        )}
+        {tab === 'routines' && (
+        <Pressable style={styles.fab} onPress={() => {
+            const id = addRoutine({ name: 'New Routine', startTime: null, items: [], isScheduled: false });
+            setExpandedId(id);
+        }}>
+            <Text style={styles.fabLabel}>+</Text>
+        </Pressable>
+        )}
 
       {tab === 'timers' && (
         <FlatList

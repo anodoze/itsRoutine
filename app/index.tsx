@@ -1,47 +1,37 @@
 import { useEffect } from "react";
-import { View, Button, StyleSheet } from "react-native";
-import TimerView from "./TimerView";
+import { Button, StyleSheet, View, Text } from "react-native";
+import TimerView from "./components/TimerView";
 import { useRegistry } from "./RegistryContext";
 import { createSeedData } from "./Seed";
-
 import { useRouter } from 'expo-router';
-const router = useRouter();
 
 export default function Index() {
+  const router = useRouter();
   const { registry, loading, seedRegistry } = useRegistry();
 
-  // Seed on first launch if empty
-  useEffect(() => {
-    if (!loading && Object.keys(registry.routines).length === 0) {
-      seedRegistry(createSeedData());
-    }
-  }, [loading, registry.routines, seedRegistry]);
+  if (loading) return null;
 
-  const handleReset = () => {
-    seedRegistry(createSeedData());
-  };
-
-  if (loading) {
-    return null; // or loading spinner
-  }
-
-  const containerRoutine = registry.routines['r_container'];
-  
-  if (!containerRoutine) {
-    return null; // waiting for seed
-  }
+  const routines = Object.values(registry.routines);
+  const containerRoutine = routines[0]; // just grab the first one for now
 
   return (
     <View style={styles.container}>
-      <TimerView routine={containerRoutine} />
-      <Button title="Reset Data" onPress={handleReset} />
-      <Button title="manage" onPress={() => router.push('/manage')} />
+      {containerRoutine ? (
+        <TimerView routine={containerRoutine} />
+      ) : (
+        <View style={styles.empty}>
+          <Text style={styles.emptyText}>No routines yet.</Text>
+          <Button title="Create one" onPress={() => router.push('/components/manage')} />
+        </View>
+      )}
+      <Button title="Reset Data" onPress={() => seedRegistry(createSeedData())} />
+      <Button title="Manage" onPress={() => router.push('/components/manage')} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+  container: { flex: 1 },
+  empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
+  emptyText: { fontSize: 18, color: '#888' },
 });

@@ -1,7 +1,7 @@
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { Routine } from './types';
-import { useRoutineRunner } from './hooks/use-routine-runner';
-import { useRegistry } from './RegistryContext';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import { useRoutineRunner } from '../hooks/use-routine-runner';
+import { useRegistry } from '../RegistryContext';
+import { Routine } from '../types';
 
 interface TimerViewProps {
   routine: Routine;
