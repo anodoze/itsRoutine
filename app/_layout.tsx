@@ -1,5 +1,10 @@
 import { Stack } from "expo-router";
+import { RegistryProvider } from "./RegistryContext";
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <RegistryProvider>
+      <Stack />
+    </RegistryProvider>
+  );
 }

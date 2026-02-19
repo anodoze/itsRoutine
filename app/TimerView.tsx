@@ -1,67 +1,16 @@
 import { View, Text, Button, StyleSheet } from 'react-native';
-import { Timer, Routine, Registry } from './types';
+import { Routine } from './types';
 import { useRoutineRunner } from './hooks/use-routine-runner';
-
-export const testTimers: Timer[] = [
-  {
-    id: 't1',
-    name: 'Stretch',
-    durationSeconds: 3,
-    isActive: true
-  },
-  {
-    id: 't2', 
-    name: 'Push-ups',
-    durationSeconds: 10,
-    isActive: true
-  },
-  {
-    id: 't3', 
-    name: 'jump',
-    durationSeconds: 1,
-    isActive: true
-  }
-];
-
-export const nestedRoutine: Routine = {
-  id: 'r2',
-  name: 'Cooldown',
-  startTime: null,
-  items: [
-    { type: 'timer', timerId: 't3' },
-    { type: 'timer', timerId: 't2' },
-    { type: 'timer', timerId: 't3' }
-  ],
-  isScheduled: false
-}
-
-export const testRoutine: Routine = {
-  id: 'r1',
-  name: 'Quick Warmup',
-  startTime: null,
-  items: [
-    { type: 'timer', timerId: 't1' },
-    { type: 'routine', routineId: 'r2' },
-    { type: 'timer', timerId: 't2' }
-  ],
-  isScheduled: false
-};
-
-const testRegistry: Registry = {
-  timers: Object.fromEntries(testTimers.map(t => [t.id, t])),
-  routines: { 
-    [testRoutine.id]: testRoutine,
-    [nestedRoutine.id]: nestedRoutine
-   }
-};
+import { useRegistry } from './RegistryContext';
 
 interface TimerViewProps {
   routine: Routine;
 }
 
 export default function TimerView({ routine }: TimerViewProps) {
+  const { registry } = useRegistry();
   const { currentTimer, secondsLeft, isPaused, isDone, pause, resume, skip } = 
-    useRoutineRunner(routine, testRegistry);
+    useRoutineRunner(routine, registry);
 
   if (!currentTimer || isDone) {
     return (
