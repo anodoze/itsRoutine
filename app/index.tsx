@@ -4,6 +4,7 @@ import TimerView from "./components/TimerView";
 import { useRegistry } from "./RegistryContext";
 import { createSeedData } from "./Seed";
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function Index() {
   const containerRoutine = routines[0]; // just grab the first one for now
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {containerRoutine ? (
         <TimerView routine={containerRoutine} />
       ) : (
@@ -26,7 +27,7 @@ export default function Index() {
       )}
       <Button title="Reset Data" onPress={() => seedRegistry(createSeedData())} />
       <Button title="Manage" onPress={() => router.push('/components/manage')} />
-    </View>
+    </SafeAreaView>
   );
 }
 
