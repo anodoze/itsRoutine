@@ -45,9 +45,8 @@ Goal: help to create and maintain daily habits with gentle alarms, reminders, an
 Main page, shows the active routine and active timer within the routine
 
 ## Manage - manage.tsx
-Space for adding and editing Routines, Timers and Tasks
-- 2-Tab structure, Routines/Tasks
-- List view for each, items editable in place
+Space for adding and editing Routines
+- List view, items editable via modal
 - Routines have drag-and-drop interface for arranging sub-elements
 
 # Technical Architecture
