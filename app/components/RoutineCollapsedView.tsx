@@ -11,12 +11,12 @@ interface Props {
 export default function RoutineCollapsedView({ routine, onExpand }: Props) {
   const itemCount = routine.items.length;
   return (
-    <Pressable onPress={onExpand} style={styles.card}>
-      <View style={styles.row}>
-        <Text style={styles.name}>{routine.name}</Text>
-        <View style={styles.right}>
-         <Text style={styles.meta}>{itemCount} {itemCount === 1 ? 'item' : 'items'}</Text>
-         <Text style={styles.chevron}>▶</Text>
+    <Pressable onPress={onExpand}>
+      <View>
+        <Text>{routine.name}</Text>
+        <View>
+         <Text>{itemCount} {itemCount === 1 ? 'item' : 'items'}</Text>
+         <Text>▶</Text>
         </View>
       </View>
     </Pressable>
@@ -25,10 +25,4 @@ export default function RoutineCollapsedView({ routine, onExpand }: Props) {
 
 // RoutineCollapsedView
 const styles = StyleSheet.create({
-  card: { ...layout.card, backgroundColor: colors.card },
-  row: { ...layout.row, justifyContent: 'space-between' },
-  name: { ...typography.heading },
-  right: { ...layout.row, gap: 8 },
-  meta: { ...typography.meta },
-  chevron: { fontSize: 16, color: colors.textMuted },
 });

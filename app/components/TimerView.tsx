@@ -14,17 +14,17 @@ export default function TimerView({ routine }: TimerViewProps) {
 
   if (!currentTimer || isDone) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.name}>Done!</Text>
+      <View>
+        <Text>Done!</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.name}>{currentTimer.name}</Text>
+    <View>
+      <Text>{currentTimer.name}</Text>
       {secondsLeft !== null && (
-        <Text style={styles.timer}>{secondsLeft}</Text>
+        <Text >{secondsLeft}</Text>
       )}
       <Button 
         title={isPaused ? 'Start' : 'Pause'}
@@ -39,20 +39,5 @@ export default function TimerView({ routine }: TimerViewProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  timer: {
-    fontSize: 72,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
+
 });

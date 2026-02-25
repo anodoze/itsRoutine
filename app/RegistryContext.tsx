@@ -1,22 +1,14 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { Timer, Routine, Registry } from './types';
+import { Routine, Registry } from './types';
 import { loadRegistry, saveRegistry } from './Storage';
 
 type RegistryContextValue = {
   registry: Registry;
   loading: boolean;
-  
-  addTimer: (timer: Omit<Timer, 'id'>) => string;
-  updateTimer: (id: string, updates: Partial<Timer>) => void;
-  deleteTimer: (id: string) => Promise<boolean>;
-  
   addRoutine: (routine: Omit<Routine, 'id'>) => string;
   updateRoutine: (id: string, updates: Partial<Routine>) => void;
   deleteRoutine: (id: string) => Promise<boolean>;
-  
-  getTimerReferences: (timerId: string) => Routine[];
   getRoutineReferences: (routineId: string) => Routine[];
-  
   // Dev
   seedRegistry: (data: Registry) => void;
 };
@@ -34,7 +26,7 @@ function generateId(prefix: string): string { // net-todo: use UUID
 }
 
 export function RegistryProvider({ children }: { children: React.ReactNode }) {
-  const [registry, setRegistry] = useState<Registry>({ timers: {}, routines: {} });
+  const [registry, setRegistry] = useState<Registry>({ routines: {} });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -49,68 +41,11 @@ export function RegistryProvider({ children }: { children: React.ReactNode }) {
     if (!loading) saveRegistry(registry);
   }, [registry, loading]);
 
-  const getTimerReferences = useCallback((timerId: string): Routine[] => {
-    return Object.values(registry.routines).filter(routine =>
-      routine.items.some(item => item.type === 'timer' && item.timerId === timerId)
-    );
-  }, [registry]);
-
   const getRoutineReferences = useCallback((routineId: string): Routine[] => {
     return Object.values(registry.routines).filter(routine =>
       routine.items.some(item => item.type === 'routine' && item.routineId === routineId)
     );
   }, [registry]);
-
-  const addTimer = useCallback((timer: Omit<Timer, 'id'>): string => {
-    const id = generateId('t');
-    setRegistry(prev => ({
-      ...prev,
-      timers: { ...prev.timers, [id]: { ...timer, id } as Timer }
-    }));
-    return id;
-  }, []);
-
-  const updateTimer = useCallback((id: string, updates: Partial<Timer>) => {
-    setRegistry(prev => {
-      const existing = prev.timers[id];
-      if (!existing) return prev;
-      return {
-        ...prev,
-        timers: { ...prev.timers, [id]: { ...existing, ...updates } }
-      };
-    });
-  }, []);
-
-  const deleteTimer = useCallback(async (id: string): Promise<boolean> => {
-    const references = getTimerReferences(id);
-    
-    if (references.length > 0) {
-      // TODO: Show confirmation modal with references list
-      // For now, auto-confirm
-      console.log(`Timer ${id} referenced in:`, references.map(r => r.name));
-    }
-
-    // Remove from all routines
-    setRegistry(prev => {
-      const newRoutines = { ...prev.routines };
-      for (const routine of references) {
-        newRoutines[routine.id] = {
-          ...routine,
-          items: routine.items.filter(item => 
-            !(item.type === 'timer' && item.timerId === id)
-          )
-        };
-      }
-
-      const { [id]: removed, ...remainingTimers } = prev.timers;
-      return {
-        timers: remainingTimers,
-        routines: newRoutines
-      };
-    });
-
-    return true;
-  }, [getTimerReferences]);
 
   const addRoutine = useCallback((routine: Omit<Routine, 'id'>): string => {
     const id = generateId('r');
@@ -167,15 +102,10 @@ export function RegistryProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value: RegistryContextValue = {
-    registry,
-    loading,
-    addTimer,
-    updateTimer,
-    deleteTimer,
+    registry, loading,
     addRoutine,
     updateRoutine,
     deleteRoutine,
-    getTimerReferences,
     getRoutineReferences,
     seedRegistry,
   };

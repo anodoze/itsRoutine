@@ -1,30 +1,21 @@
-// app/theme.ts
 export const colors = {
-  primary: '#4a90e2',
-  danger: 'red',
-  card: '#f5f5f5',
-  nestedCard: '#ececec',
-  border: '#ddd',
-  borderLight: '#eee',
-  textPrimary: '#000',
-  textSecondary: '#444',
-  textMuted: '#888',
-  textLight: '#aaa',
-  activeFieldBg: '#e8f0fe',
-  activeFieldBorder: '#4a90e2',
-  draggingBg: '#e0e8ff',
-  white: '#fff',
-};
+  ground: '#B5E4FF',
+  secondaryGround: '#010529',
+  background: 'rgba(1, 5, 41, 0.69)',
+  textPrimary: '#DDF2F6',
+  textSecondary: '#b8c2c2'
+}
 
 export const typography = {
-  heading: { fontSize: 18, fontWeight: 'bold' as const },
-  body: { fontSize: 16 },
-  meta: { fontSize: 14, color: colors.textMuted },
-  label: { fontSize: 16, color: colors.textSecondary },
+  title: { fontSize: 24, color: colors.textPrimary, fontWeight: 'bold' as const},
+  heading: { fontSize: 18, color: colors.textPrimary, fontWeight: 'bold' as const },
+  body: { fontSize: 14, color: colors.textPrimary },
+  strong: { fontSize: 14, color: colors.textPrimary, fontWeight: 'bold' as const },
+  fine: { fontSize: 12, color: colors.textSecondary },
 };
 
 export const layout = {
-  card: { margin: 8, padding: 12, borderRadius: 8 },
-  field: { padding: 8, borderRadius: 6 },
+  card: { margin: 4, padding: 8, borderRadius: 2, backgroundColor: colors.background },
+  field: { margin: 2, padding: 2, paddingLeft: 8, paddingRight: 8, borderRadius: 2, backgroundColor: colors.background },
   row: { flexDirection: 'row' as const, alignItems: 'center' as const },
 };

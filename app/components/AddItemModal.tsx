@@ -1,10 +1,7 @@
 // app/components/manage/AddItemModal.tsx
-import { useState } from 'react';
 import { Modal, View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
 import { useRegistry } from '../RegistryContext';
-import { RoutineItem } from '../types';
-
-type Tab = 'timers' | 'routines';
+import { RoutineItem, Registry } from '../types';
 
 interface Props {
   visible: boolean;
@@ -13,26 +10,31 @@ interface Props {
   onClose: () => void;
 }
 
+//lookup to prevent routines from being able to add themselves as subroutines
+function routineContains(registry: Registry, routineId: string, targetId: string): boolean {
+  const routine = registry.routines[routineId];
+  if (!routine) return false;
+  return routine.items.some((item: RoutineItem) =>
+    item.type === 'routine' && (
+      item.routineId === targetId ||
+      routineContains(registry, item.routineId, targetId)
+    )
+  );
+}
+
 export default function AddItemModal({ visible, routineId, onAdd, onClose }: Props) {
-  const { registry, addTimer } = useRegistry();
-  const [tab, setTab] = useState<Tab>('timers');
+  const { registry } = useRegistry();
+  const routines = Object.values(registry.routines).filter(r =>
+    r.id !== routineId && !routineContains(registry, r.id, routineId)
+  );
 
-  const timers = Object.values(registry.timers);
-  const routines = Object.values(registry.routines).filter(r => r.id !== routineId);
-
-  const handleNewTimer = () => {
-    const id = addTimer({ name: 'New Timer', isActive: false });
-    onAdd({ type: 'timer', timerId: id });
+  const handleAddTimer = () => {
+    onAdd({ type: 'timer', timer: { name: 'New Timer' } });
     onClose();
   };
 
-  const handlePickTimer = (timerId: string) => {
-    onAdd({ type: 'timer', timerId });
-    onClose();
-  };
-
-  const handlePickRoutine = (routineId: string) => {
-    onAdd({ type: 'routine', routineId });
+  const handlePickRoutine = (id: string) => {
+    onAdd({ type: 'routine', routineId: id });
     onClose();
   };
 
@@ -44,44 +46,20 @@ export default function AddItemModal({ visible, routineId, onAdd, onClose }: Pro
           <Pressable onPress={onClose}><Text style={styles.close}>✕</Text></Pressable>
         </View>
 
-        <View style={styles.tabBar}>
-          {(['timers', 'routines'] as Tab[]).map(t => (
-            <Pressable key={t} onPress={() => setTab(t)}
-              style={[styles.tab, tab === t && styles.activeTab]}>
-              <Text style={[styles.tabLabel, tab === t && styles.activeTabLabel]}>
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </Text>
+        <Pressable onPress={handleAddTimer} style={styles.newItem}>
+          <Text style={styles.newItemLabel}>+ New Timer</Text>
+        </Pressable>
+
+        <Text>Add Routine</Text>
+        <FlatList
+          data={routines}
+          keyExtractor={r => r.id}
+          renderItem={({ item }) => (
+            <Pressable onPress={() => handlePickRoutine(item.id)} style={styles.item}>
+              <Text style={styles.itemLabel}>{item.name}</Text>
             </Pressable>
-          ))}
-        </View>
-
-        {tab === 'timers' && (
-          <FlatList
-            data={[null, ...timers]} // null = "New Timer" sentinel
-            keyExtractor={item => item?.id ?? 'new'}
-            renderItem={({ item }) => item === null ? (
-              <Pressable onPress={handleNewTimer} style={styles.newItem}>
-                <Text style={styles.newItemLabel}>+ New Timer</Text>
-              </Pressable>
-            ) : (
-              <Pressable onPress={() => handlePickTimer(item.id)} style={styles.item}>
-                <Text style={styles.itemLabel}>{item.name}</Text>
-              </Pressable>
-            )}
-          />
-        )}
-
-        {tab === 'routines' && (
-          <FlatList
-            data={routines}
-            keyExtractor={r => r.id}
-            renderItem={({ item }) => (
-              <Pressable onPress={() => handlePickRoutine(item.id)} style={styles.item}>
-                <Text style={styles.itemLabel}>{item.name}</Text>
-              </Pressable>
-            )}
-          />
-        )}
+          )}
+        />
       </View>
     </Modal>
   );

@@ -1,33 +1,68 @@
 // app/components/manage/RoutineItemRow.tsx
-import { View } from 'react-native';
-import { RoutineItem } from '../types';
-import { useRegistry } from '../RegistryContext';
-import TimerListItem from './TimerListItem';
-import RoutineEditView from './RoutineEditView';
+import { useState } from "react";
+import { View } from "react-native";
+import { useRegistry } from "../RegistryContext";
+import { Routine, RoutineItem } from "../types";
+import RoutineListItem from "./RoutineListItem";
+import TimerEditModal from "./TimerEditModal";
+import TimerListItem from "./TimerListItem";
 
 interface Props {
   item: RoutineItem;
-  isExpanded: boolean;
-  onExpand: () => void;
+  itemIndex: number;
+  routine: Routine;
   depth: number;
+  expandedRoutineId: string | null;
+  onToggleRoutine: (id: string) => void;
 }
 
-export default function RoutineItemRow({ item, isExpanded, onExpand, depth }: Props) {
-  const { registry } = useRegistry();
+export default function RoutineItemRow({
+  item,
+  itemIndex,
+  routine,
+  depth,
+  expandedRoutineId,
+  onToggleRoutine
+}: Props) {
+  const { registry, updateRoutine } = useRegistry();
+  const [editingTimer, setEditingTimer] = useState(false);
 
-  if (item.type === 'timer') {
-    const timer = registry.timers[item.timerId];
-    if (!timer) return null;
+  if (item.type === "timer") {
     return (
-      <TimerListItem timer={timer} isExpanded={isExpanded} onExpand={onExpand} />
+      <>
+        <TimerListItem
+          timer={item.timer}
+          onEdit={() => setEditingTimer(true)}
+          onDelete={() =>
+            updateRoutine(routine.id, {
+              items: routine.items.filter((_, i) => i !== itemIndex),
+            })
+          }
+        />
+        <TimerEditModal
+          visible={editingTimer}
+          timer={item.timer}
+          onSave={(updated) => {
+            const items = [...routine.items];
+            items[itemIndex] = { type: "timer", timer: updated };
+            updateRoutine(routine.id, { items });
+            setEditingTimer(false);
+          }}
+          onCancel={() => setEditingTimer(false)}
+        />
+      </>
     );
   }
 
-  const routine = registry.routines[item.routineId];
-  if (!routine) return null;
+  const subroutine = registry.routines[item.routineId];
+  if (!subroutine) return null;
   return (
     <View style={{ paddingLeft: depth * 12 }}>
-      <RoutineEditView routine={routine} depth={depth + 1} />
+      <RoutineListItem
+        routine={subroutine}
+        isExpanded={expandedRoutineId === subroutine.id}
+        onExpand={() => onToggleRoutine(subroutine.id)}
+      />
     </View>
   );
 }

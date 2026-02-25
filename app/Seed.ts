@@ -1,61 +1,30 @@
-import { Registry, Timer, Routine } from './types';
+import { Registry } from './types';
 
 export function createSeedData(): Registry {
-  const timers: Timer[] = [
-    {
-      id: 't1',
-      name: 'Stretch',
-      durationSeconds: 5,
-      isActive: true
-    },
-    {
-      id: 't2',
-      name: 'Push-ups',
-      durationSeconds: 8,
-      isActive: true
-    },
-    {
-      id: 't3',
-      name: 'Squats',
-      durationSeconds: 6,
-      isActive: true
-    },
-    {
-      id: 't4',
-      name: 'Cooldown',
-      durationSeconds: 4,
-      isActive: true
-    }
-  ];
-
-  const nestedRoutine: Routine = {
-    id: 'r_nested',
-    name: 'Quick Cardio',
-    startTime: null,
-    items: [
-      { type: 'timer', timerId: 't2' },
-      { type: 'timer', timerId: 't3' }
-    ],
-    isScheduled: false
-  };
-
-  const containerRoutine: Routine = {
-    id: 'r_container',
-    name: 'Morning Workout',
-    startTime: null,
-    items: [
-      { type: 'timer', timerId: 't1' },
-      { type: 'routine', routineId: 'r_nested' },
-      { type: 'timer', timerId: 't4' }
-    ],
-    isScheduled: false
-  };
-
   return {
-    timers: Object.fromEntries(timers.map(t => [t.id, t])),
     routines: {
-      [nestedRoutine.id]: nestedRoutine,
-      [containerRoutine.id]: containerRoutine
-    }
+      r_morning: {
+        id: 'r_morning',
+        name: 'Morning Routine',
+        startTime: '07:00',
+        isScheduled: true,
+        items: [
+          { type: 'timer', timer: { name: 'Drink Water', durationSeconds: 3 } },
+          { type: 'timer', timer: { name: 'Meditation', durationSeconds: 5 } },
+          { type: 'timer', timer: { name: 'Write Daily Plan', durationSeconds: 4 } },
+          { type: 'routine', routineId: 'r_stretch' },
+        ],
+      },
+      r_stretch: {
+        id: 'r_stretch',
+        name: 'Morning Stretch',
+        startTime: null,
+        isScheduled: false,
+        items: [
+          { type: 'timer', timer: { name: 'Neck Rolls', durationSeconds: 6 } },
+          { type: 'timer', timer: { name: 'Hip Flexors', durationSeconds: 9 } },
+        ],
+      },
+    },
   };
 }

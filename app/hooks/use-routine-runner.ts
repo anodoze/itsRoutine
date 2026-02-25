@@ -1,22 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Timer, Routine, Registry } from "../types";
+import { Routine, Registry } from "../types";
+import { TimerData } from "../types";
 
 type Position = {
   routineId: string;
   itemIndex: number;
 };
 
-function resolveCurrentTimer(
-  stack: Position[],
-  registry: Registry
-): Timer | null {
+function resolveCurrentTimer(stack: Position[], registry: Registry): TimerData | null {
   if (stack.length === 0) return null;
   const top = stack[stack.length - 1];
   const routine = registry.routines[top.routineId];
   if (!routine) return null;
   const item = routine.items[top.itemIndex];
-  if (!item || item.type !== "timer") return null;
-  return registry.timers[item.timerId] ?? null;
+  if (!item || item.type !== 'timer') return null;
+  return item.timer;
 }
 
 export function useRoutineRunner(root: Routine, registry: Registry) {
@@ -39,7 +37,7 @@ export function useRoutineRunner(root: Routine, registry: Registry) {
       setSecondsLeft(currentTimer.durationSeconds ?? null);
         if (!hasStarted) setIsPaused(true);
     }
-  }, [currentTimer?.id]);
+  }, [stack]);
 
   const advance = useCallback(
     (currentStack: Position[]): Position[] | "done" => {
@@ -61,10 +59,8 @@ export function useRoutineRunner(root: Routine, registry: Registry) {
         if (nextItem.type === "timer") return s;
         if (nextItem.type === "routine") {
           s = [...s, { routineId: nextItem.routineId, itemIndex: -1 }];
-          // loop will advance to index 0
         }
       }
-
       return "done";
     },
     [registry]

@@ -6,13 +6,11 @@ const STORAGE_KEY = '@itsRoutine:registry';
 export async function loadRegistry(): Promise<Registry> {
   try {
     const json = await AsyncStorage.getItem(STORAGE_KEY);
-    if (!json) {
-      return { timers: {}, routines: {} };
-    }
+    if (!json) return { routines: {} };
     return JSON.parse(json);
   } catch (error) {
     console.error('Failed to load registry:', error);
-    return { timers: {}, routines: {} };
+    return { routines: {} };
   }
 }
 
