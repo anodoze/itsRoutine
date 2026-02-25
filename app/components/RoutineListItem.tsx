@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { StyleSheet } from "react-native";
 import { Routine } from "../types";
 import RoutineCollapsedView from "./RoutineCollapsedView";
 import RoutineExpandedView from "./RoutineExpandedView";

@@ -1,4 +1,3 @@
-// app/components/manage/RoutineCollapsedView.tsx
 import { Pressable, View, Text, StyleSheet } from 'react-native';
 import { Routine } from '../types';
 import { layout, typography, colors } from '../theme'
@@ -11,18 +10,17 @@ interface Props {
 export default function RoutineCollapsedView({ routine, onExpand }: Props) {
   const itemCount = routine.items.length;
   return (
-    <Pressable onPress={onExpand}>
+    <Pressable onPress={onExpand} style={styles.routineCard}>
+      <Text style={ styles.routineHeading }>{routine.name} ▶</Text>
       <View>
-        <Text>{routine.name}</Text>
-        <View>
-         <Text>{itemCount} {itemCount === 1 ? 'item' : 'items'}</Text>
-         <Text>▶</Text>
-        </View>
+        <Text style={styles.itemCount}>{itemCount} {itemCount === 1 ? 'item' : 'items'}</Text>
       </View>
     </Pressable>
   );
 }
 
-// RoutineCollapsedView
 const styles = StyleSheet.create({
+  routineCard: { ...layout.card, ...layout.row },
+  routineHeading: { ...typography.heading },
+  itemCount: { ...typography.body, marginLeft: 16 }
 });

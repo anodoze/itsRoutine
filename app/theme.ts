@@ -1,7 +1,7 @@
 export const colors = {
   ground: '#B5E4FF',
   secondaryGround: '#010529',
-  background: 'rgba(1, 5, 41, 0.69)',
+  background: 'rgba(1, 5, 41, 0.30)',
   textPrimary: '#DDF2F6',
   textSecondary: '#b8c2c2'
 }
