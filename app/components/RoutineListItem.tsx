@@ -1,21 +1,35 @@
+import { useState } from "react";
 import { Routine } from "../types";
 import RoutineCollapsedView from "./RoutineCollapsedView";
-import RoutineEditView from "./RoutineEditView";
+import RoutineExpandedView from "./RoutineExpandedView";
+import RoutineEditModal from "./RoutineEditModal";
+
+type ViewState = 'collapsed' | 'expanded' | 'editing';
 
 interface Props {
   routine: Routine;
-  isExpanded: boolean;
-  onExpand: () => void;
 }
 
-export default function RoutineListItem({
-  routine,
-  isExpanded,
-  onExpand,
-}: Props) {
-  return isExpanded ? (
-    <RoutineEditView routine={routine} onCollapse={onExpand} />
-  ) : (
-    <RoutineCollapsedView routine={routine} onExpand={onExpand} />
+export default function RoutineListItem({ routine }: Props) {
+  const [state, setState] = useState<ViewState>('collapsed');
+
+  return (
+    <>
+      {state === 'collapsed' && (
+        <RoutineCollapsedView routine={routine} onExpand={() => setState('expanded')} />
+      )}
+      {state === 'expanded' && (
+        <RoutineExpandedView
+          routine={routine}
+          onCollapse={() => setState('collapsed')}
+          onEdit={() => setState('editing')}
+        />
+      )}
+      <RoutineEditModal
+        visible={state === 'editing'}
+        routine={routine}
+        onClose={() => setState('expanded')}
+      />
+    </>
   );
 }

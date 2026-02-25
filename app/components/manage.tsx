@@ -17,11 +17,7 @@ export default function ManageScreen() {
         data={routines}
         keyExtractor={(r) => r.id}
         renderItem={({ item }) => (
-          <RoutineListItem
-            routine={item}
-            isExpanded={expandedId === item.id}
-            onExpand={() => setExpandedId(prev => prev === item.id ? null : item.id)}
-          />
+          <RoutineListItem routine={item}/>
         )}
       />
       <Pressable

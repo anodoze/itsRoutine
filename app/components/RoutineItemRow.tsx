@@ -21,8 +21,6 @@ export default function RoutineItemRow({
   itemIndex,
   routine,
   depth,
-  expandedRoutineId,
-  onToggleRoutine
 }: Props) {
   const { registry, updateRoutine } = useRegistry();
   const [editingTimer, setEditingTimer] = useState(false);
@@ -58,11 +56,7 @@ export default function RoutineItemRow({
   if (!subroutine) return null;
   return (
     <View style={{ paddingLeft: depth * 12 }}>
-      <RoutineListItem
-        routine={subroutine}
-        isExpanded={expandedRoutineId === subroutine.id}
-        onExpand={() => onToggleRoutine(subroutine.id)}
-      />
+      <RoutineListItem routine={subroutine} />
     </View>
   );
 }

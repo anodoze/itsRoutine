@@ -1,7 +1,7 @@
-import { TimerData } from "../types";
-import { View, Pressable, Text, StyleSheet } from "react-native";
-import { formatDuration } from "../utils";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { layout, typography } from "../theme";
+import { TimerData } from "../types";
+import { formatDuration } from "../utils";
 
 interface Props {
   timer: TimerData;
@@ -12,24 +12,26 @@ interface Props {
 export default function TimerListItem({ timer, onEdit, onDelete }: Props) {
   return (
     <View style={styles.card}>
-      <Text>{timer.name}</Text>
-      <Text>
-        {timer.durationSeconds ? formatDuration(timer.durationSeconds) : 'No duration'}
+      <Text style={styles.durationLabel}>
+        {timer.durationSeconds
+          ? formatDuration(timer.durationSeconds)
+          : "No duration"}
       </Text>
-      <Pressable onPress={onEdit}><Text>Edit</Text></Pressable>
-      <Pressable onPress={onDelete}><Text>Delete</Text></Pressable>
+      <Text style={styles.name}>{timer.name}</Text>
+      <Pressable onPress={onEdit} style={styles.button}>
+        <Text style={styles.buttonText}>Edit</Text>
+      </Pressable>
+      <Pressable onPress={onDelete} style={styles.button}>
+        <Text style={ styles.buttonText }>Delete</Text>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: { ...layout.card },
-  titleRow: { ...layout.row, justifyContent: "space-between" as const },
-  titleRowHeading: { ...typography.heading },
-  durationLabel: { ...layout.row },
-  durationLabelText: { ...typography.body },
-  editRow: { ...layout.row, margin: "auto" as const },
-  editLabel: { ...typography.strong, marginRight: 4 },
-  editField: { ...layout.field },
-  editFieldText: { ...typography.body }
+  card: { ...layout.card, ...layout.row },
+  name: { ...typography.heading },
+  durationLabel: { ...typography.body, marginRight: 8 },
+  button: { ...layout.button },
+  buttonText: { ...typography.button }
 });
