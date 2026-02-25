@@ -7,25 +7,20 @@ React Native (Typescript)
 Targeting Android first, will adapt to iOS later
 
 # Terms
-## Timer: a single task with any of the following properties
+## Timer: a single timer with any of the following properties
 - label (required)
-- start time - can be scheduled or started manually. overridden within a Routine
-- end time - overridden within a Routine
-- duration - all Timers have a button to end early. if no duration is set, it will not end unless the user ends it or it is interrupted by another Routine or Timer
-- miss action (not implemented) - if a task is skipped, what happens?
-    - fall to the bottom of the routine
-    - fall to next routine
-- secondary routines - fallback space for missed items in an earlier routine
-
-Timers can be started and ended individually, or they can be included in Routines.
+- description
+- duration - all Timers have a button to end early. if no duration is set, it will not end unless the user ends it or it is interrupted by another routine item
+- task categories - list of types of Tasks that my be displayed in a timer
 
 ## Routine: a collection of Timers with any of the following properties
 - label (required)
+- description
 - start time
 - time alerts - for lists of tasks with flexible times, flags the current time to keep the user on schedule
 - end time - can be configured as a time alert or hard cutoff
 - duration
-
+- routine items - timers or subroutines that run within the routine
 Routines are containers for everything else
 
 ## Task: a task without a fixed time - not implemented
@@ -33,7 +28,7 @@ Routines are containers for everything else
 - category
 - notes
 - completion status: incomplete/on hold/complete
-  A Timer can be a container for Tasks. For example: 1 hour for tasks in the "pay bills" category. While that timer is active, tasks from "pay bills" will be shown one after another and can be marked complete OR have notes added and then put at the bottom of the list to be addressed later
+A Timer can be a container for Tasks. For example: 1 hour for tasks in the "pay bills" category. While that timer is active, tasks from "pay bills" will be shown one after another and can be marked complete OR have notes added and then put at the bottom of the list to be addressed later
 - blocking task: link to another task that must be done before this can begin. A task with a blocking task is automatically on hold
 
 # Core design concepts
@@ -51,22 +46,18 @@ Main page, shows the active routine and active timer within the routine
 
 ## Manage - manage.tsx
 Space for adding and editing Routines, Timers and Tasks
-
-- 3-Tab structure, Routines/Timers/Tasks
+- 2-Tab structure, Routines/Tasks
 - List view for each, items editable in place
 - Routines have drag-and-drop interface for arranging sub-elements
 
 # Technical Architecture
-## State Management
-- `RegistryContext` provides global access to timers and routines via `useRegistry()` hook
+- `RegistryContext` provides global access to routines via `useRegistry()` hook
 - All data persists to AsyncStorage automatically on changes
 - CRUD operations are atomic - deletes cascade to remove references from parent routines
-
-## Key Files
-- `types.ts` - Core data structures (Timer, Routine, Registry)
 - `RegistryContext.tsx` - Global state provider, CRUD operations, persistence
 - `storage.ts` - AsyncStorage read/write helpers
 - `hooks/use-routine-runner.ts` - State machine for executing routines with nesting support
+- `types.ts` - Core data structures (Routine, Registry)
 - `seed.ts` - Dev data for testing (call `seedRegistry()` to reset)
 
 ## Routine Execution Model
@@ -86,4 +77,4 @@ The runner hook uses a stack-based traversal to handle nested routines:
 ## Current Limitations
 - Delete confirmations are stubbed (auto-confirm, just log warnings)
 - No debouncing on AsyncStorage writes (saves on every mutation)
-- No validation on routine item references (will crash if timer/routine missing from registry)
+- No validation on routine item references (will crash if routine is missing from registry)
