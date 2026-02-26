@@ -28,8 +28,11 @@ Routines are containers for everything else
 - category
 - notes
 - completion status: incomplete/on hold/complete
-A Timer can be a container for Tasks. For example: 1 hour for tasks in the "pay bills" category. While that timer is active, tasks from "pay bills" will be shown one after another and can be marked complete OR have notes added and then put at the bottom of the list to be addressed later
+A Timer can be a container for Tasks. For example: 1 hour for tasks in the "clean house" category. While that timer is active, tasks from "clean house" will be shown one after another and can be marked complete OR have notes added and then put at the bottom of the list to be addressed later
 - blocking task: link to another task that must be done before this can begin. A task with a blocking task is automatically on hold
+- task type
+    - one-off - when marked complete, will stay present until the containing routine finishes (to give a chance to un-complete in case of misclicks/second thoughts), and then is deleted.
+    - recurring: happens on a regular interval, such as daily, weekly, monthly or yearly. when marked "complete", goes dormant until it is relevant again.
 
 # Core design concepts
 Goal: help to create and maintain daily habits with gentle alarms, reminders, and easily-configurable time-blocking. We want structure to make sure we make the most of your day, but the flexibility to handle the changing demands of everyday life.

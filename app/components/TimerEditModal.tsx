@@ -47,6 +47,7 @@ export default function TimerEditModal({
           <View style={styles.modal}>
             <Text style={styles.cardTitle}>Edit {draft.name}</Text>
             <View style={styles.card}>
+              
               <View style={styles.editRow}>
                 <Text style={styles.editLabel}>Title: </Text>
                 <TextInput
@@ -62,6 +63,7 @@ export default function TimerEditModal({
                   setDraft((d) => ({ ...d, durationSeconds: val || undefined }))
                 }
               />
+
               <View style={styles.buttonRow}>
                 <Pressable onPress={onCancel} style={styles.button}>
                   <Text style={styles.buttonText}>Cancel</Text>
@@ -70,6 +72,7 @@ export default function TimerEditModal({
                   <Text style={styles.buttonText}>Save</Text>
                 </Pressable>
               </View>
+
             </View>
           </View>
         </ScrollView>
