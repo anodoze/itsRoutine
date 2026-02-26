@@ -19,5 +19,6 @@ export const layout = {
   card: { margin: 4, padding: 8, borderRadius: 2, backgroundColor: colors.background },
   field: { margin: 2, padding: 2, paddingLeft: 8, paddingRight: 8, borderRadius: 2, backgroundColor: colors.background },
   row: { flexDirection: 'row' as const, alignItems: 'center' as const },
-  button: { ...typography.body, padding: 4, margin: 2, backgroundColor: colors.background,  }
+  button: { padding: 4, margin: 2, backgroundColor: colors.background  },
+  modal: {margin: 8, borderRadius: 2, backgroundColor: colors.ground }
 };
