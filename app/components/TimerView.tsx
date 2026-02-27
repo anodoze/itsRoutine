@@ -1,7 +1,8 @@
-import { Button, StyleSheet, Text, View } from 'react-native';
-import { useRoutineRunner } from '../hooks/use-routine-runner';
-import { useRegistry } from '../RegistryContext';
-import { Routine } from '../types';
+import { Button, StyleSheet, Text, View } from "react-native";
+import { useRoutineRunner } from "../hooks/use-routine-runner";
+import { useRegistry } from "../RegistryContext";
+import { colors, layout } from "../theme";
+import { Routine } from "../types";
 
 interface TimerViewProps {
   routine: Routine;
@@ -9,35 +10,38 @@ interface TimerViewProps {
 
 export default function TimerView({ routine }: TimerViewProps) {
   const { registry } = useRegistry();
-  const { currentTimer, secondsLeft, isPaused, isDone, pause, resume, skip } = 
+  const { currentTimer, secondsLeft, isPaused, isDone, pause, resume, skip } =
     useRoutineRunner(routine, registry);
 
   if (!currentTimer || isDone) {
     return (
-      <View>
+      <View style={styles.container}>
         <Text>Done!</Text>
       </View>
     );
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text>{currentTimer.name}</Text>
-      {secondsLeft !== null && (
-        <Text >{secondsLeft}</Text>
-      )}
-      <Button 
-        title={isPaused ? 'Start' : 'Pause'}
-        onPress={() => isPaused ? resume() : pause()}
-      />
-      <Button 
-        title="Skip"
-        onPress={skip}
-      />
+      {secondsLeft !== null && <Text>{secondsLeft}</Text>}
+      <View style={styles.buttonRow}>
+        <Button
+          title={isPaused ? "Start" : "Pause"}
+          onPress={() => (isPaused ? resume() : pause())}
+        />
+        <Button title="Skip" onPress={skip} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    backgroundColor: colors.ground,
+    flex: 1,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+  },
+  buttonRow: { ...layout.row },
 });

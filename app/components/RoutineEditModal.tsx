@@ -84,15 +84,18 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
           <View style={styles.modal}>
             <Text style={styles.cardTitle}>Edit {routine.name}</Text>
             <Pressable
+              style={styles.editRow}
               onPress={
                 editingName
                   ? () => setEditingName(false)
                   : () => setEditingName(true)
               }
             >
+              <Text style={styles.editLabel}>Title: </Text>
               {editingName ? (
                 <TextInput
                   autoFocus
+                  style={styles.editField}
                   value={routine.name}
                   onChangeText={(val) =>
                     updateRoutine(routine.id, { name: val })
@@ -104,7 +107,7 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
               )}
             </Pressable>
             <Pressable onPress={onClose}>
-              <Text>Done</Text>
+              <Text style={styles.button}>Done</Text>
             </Pressable>
 
             <DragList
