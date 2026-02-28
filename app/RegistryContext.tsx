@@ -21,7 +21,7 @@ export function useRegistry() {
   return ctx;
 }
 
-function generateId(prefix: string): string { // net-todo: use UUID
+function generateId(prefix: string): string { // todo: use UUID
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 }
 

@@ -12,8 +12,6 @@ interface Props {
   itemIndex: number;
   routine: Routine;
   depth: number;
-  expandedRoutineId: string | null;
-  onToggleRoutine: (id: string) => void;
 }
 
 export default function RoutineItemRow({

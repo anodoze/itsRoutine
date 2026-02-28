@@ -23,9 +23,6 @@ interface Props {
 
 export default function RoutineEditModal({ visible, routine, onClose }: Props) {
   const { updateRoutine, deleteRoutine } = useRegistry();
-  const [expandedRoutineId, setExpandedRoutineId] = useState<string | null>(
-    null,
-  );
   const [editingName, setEditingName] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -44,7 +41,7 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
   };
 
   const renderItem = (info: DragListRenderItemInfo<RoutineItem>) => {
-    const { item, onDragStart, isActive } = info;
+    const { item, onDragStart } = info;
     const itemIndex = routine.items.indexOf(item);
     return (
       <View>
@@ -55,10 +52,6 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
               itemIndex={itemIndex}
               routine={routine}
               depth={0}
-              expandedRoutineId={expandedRoutineId}
-              onToggleRoutine={(id) =>
-                setExpandedRoutineId((prev) => (prev === id ? null : id))
-              }
             />
           </View>
         </Pressable>
@@ -69,18 +62,11 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
   return (
     <Modal
       visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
+      presentationStyle="overFullScreen"
+      transparent
       onRequestClose={onClose}
     >
       <View style={styles.centerModal}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: "center",
-            padding: 24,
-          }}
-        >
           <View style={styles.modal}>
             <Text style={styles.cardTitle}>Edit {routine.name}</Text>
             <Pressable
@@ -138,7 +124,6 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
               onClose={() => setModalVisible(false)}
             />
           </View>
-        </ScrollView>
       </View>
     </Modal>
   );

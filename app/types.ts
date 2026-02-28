@@ -1,3 +1,18 @@
+export type DayOfWeek = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
+
+export type RecurrenceRule =
+  | { type: 'daily' }
+  | { type: 'weekdays'; days: DayOfWeek[] }
+  | { type: 'interval'; everyXDays: number; anchorDate: string; strict: boolean }
+  | { type: 'nthWeekday'; day: DayOfWeek; n: number }; // TODO: stub, not yet implemented
+
+export type ScheduleEntry = {
+  time: string;           // "HH:MM" 24hr
+  recurrence: RecurrenceRule;
+  lastCompleted: string | null;  // "YYYY-MM-DD"
+  anchorGroupId?: string; // TODO: stub, ignored until anchor groups are implemented
+};
+
 export interface TimerData {
   name: string;
   durationSeconds?: number;
@@ -6,9 +21,8 @@ export interface TimerData {
 export interface Routine {
   id: string;
   name: string;
-  startTime: string | null;
   items: RoutineItem[];
-  isScheduled: boolean;
+  schedule: ScheduleEntry[]; 
 }
 
 export type RoutineItem = 
@@ -17,17 +31,5 @@ export type RoutineItem =
 
 export type Registry = {
   routines: Record<string, Routine>;
-};
-
-export type RegistryContextValue = {
-  registry: Registry;
-  loading: boolean;
-  
-  addRoutine: (routine: Omit<Routine, 'id'>) => string;
-  updateRoutine: (id: string, updates: Partial<Routine>) => void;
-  deleteRoutine: (id: string) => Promise<boolean>;
-  
-  getRoutineReferences: (routineId: string) => Routine[]; // which routines nest this one
-
-  seedRegistry: (data: Registry) => void;
+  // TODO: anchorGroups: Record<string, AnchorGroup> -- add when implementing grouped scheduling
 };

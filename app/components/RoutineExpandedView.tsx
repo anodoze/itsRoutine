@@ -1,5 +1,4 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useState } from "react";
 import { Routine } from "../types";
 import RoutineItemRow from "./RoutineItemRow";
 import { layout, typography } from "../theme";
@@ -11,16 +10,17 @@ interface Props {
 }
 
 export default function RoutineExpandedView({ routine, onCollapse, onEdit }: Props) {
-  const [expandedRoutineId, setExpandedRoutineId] = useState<string | null>(null);
 
   return (
     <View style={styles.routineCard}>
-        <Pressable onPress={onCollapse} style={styles.routineRow}>
+      <View style={styles.routineRow}>
+        <Pressable onPress={onCollapse}>
           <Text style={ styles.routineHeading}>{routine.name} ▼</Text>
+        </Pressable>
         <Pressable onPress={onEdit} style={ styles.editButton }>
           <Text style={styles.editButtonText}>Edit</Text>
         </Pressable>
-        </Pressable>
+      </View>
 
       {routine.items.map((item, index) => (
           <RoutineItemRow
@@ -29,8 +29,6 @@ export default function RoutineExpandedView({ routine, onCollapse, onEdit }: Pro
             itemIndex={index}
             routine={routine}
             depth={0}
-            expandedRoutineId={expandedRoutineId}
-            onToggleRoutine={(id) => setExpandedRoutineId(prev => prev === id ? null : id)}
           />
       ))}
     </View>

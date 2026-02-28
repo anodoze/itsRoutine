@@ -30,7 +30,7 @@ export default function TimerListItem({ timer, onEdit, onDelete }: Props) {
 
 const styles = StyleSheet.create({
   card: { ...layout.card, ...layout.row },
-  name: { ...typography.heading },
+  name: { ...typography.heading, flex: 1 },
   durationLabel: { ...typography.body, marginRight: 8 },
   button: { ...layout.button },
   buttonText: { ...typography.button }

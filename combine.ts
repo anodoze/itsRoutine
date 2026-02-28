@@ -2,23 +2,26 @@ import * as fs from "fs";
 import * as path from "path";
 
 const files = [
-  // "app/design.md",
-  // "app/components/TimerView.tsx",
-  // "app/components/manage.tsx",
-  // "app/components/TimerListItem.tsx",
-  // "app/components/TimerEditView.tsx",
-  // "app/components/TimerCollapsedView.tsx",
-  // "app/components/RoutineListItem.tsx",
-  // "app/components/RoutineItemRow.tsx",
-  // "app/components/RoutineEditView.tsx",
-  // "app/components/RoutineCollapsedView.tsx",
-  // "app/components/DurationInput.tsx",
-  // "app/components/AddItemModal.tsx",
+  "app/design.md",
+  "app/index.tsx",
+  "app/_layout.tsx",
+  "app/components/TimerView.tsx",
+  "app/components/manage.tsx",
+  "app/components/TimerListItem.tsx",
+  "app/components/TimerEditModal.tsx",
+  "app/components/RoutineExpandedView.tsx",
+  "app/components/RoutineCollapsedView.tsx",
+  "app/components/RoutineListItem.tsx",
+  "app/components/RoutineItemRow.tsx",
+  "app/components/RoutineEditModal.tsx",
+  "app/components/DurationInput.tsx",
+  "app/components/AddItemModal.tsx",
   "app/types.ts",
   "app/RegistryContext.tsx",
   "app/hooks/use-routine-runner.ts",
   "app/Storage.ts",
-  "app/index.tsx"
+  "app/theme.ts",
+  "app/utils.ts",
 ];
 
 const workingDir = process.cwd();

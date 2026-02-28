@@ -21,6 +21,7 @@ Targeting Android first, will adapt to iOS later
 - end time - can be configured as a time alert or hard cutoff
 - duration
 - routine items - timers or subroutines that run within the routine
+    - eventually allow routine choice? select one of 3 workouts to within "workout" routine
 Routines are containers for everything else
 
 ## Task: a task without a fixed time - not implemented

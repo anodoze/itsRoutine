@@ -13,7 +13,7 @@ export default function Index() {
   if (loading) return null;
 
   const routines = Object.values(registry.routines);
-  const containerRoutine = routines[0]; // just grab the first one for now
+  const containerRoutine = routines[0]; // TODO: add logic for choosing routines based on scheduling/manual start
 
   return (
     <SafeAreaView style={styles.container}>

@@ -1,13 +1,10 @@
-// app/manage.tsx
-import { useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useRegistry } from "../RegistryContext";
-import { colors, layout, typography } from "../theme";
+import { colors } from "../theme";
 import RoutineListItem from "./RoutineListItem";
 
 export default function ManageScreen() {
   const { registry, addRoutine } = useRegistry();
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const routines = Object.values(registry.routines);
 
   return (
@@ -16,16 +13,13 @@ export default function ManageScreen() {
         style={styles.list}
         data={routines}
         keyExtractor={(r) => r.id}
-        renderItem={({ item }) => (
-          <RoutineListItem routine={item}/>
-        )}
+        renderItem={({ item }) => <RoutineListItem routine={item} />}
       />
       <Pressable
         style={styles.fab}
-        onPress={() => {
-          const id = addRoutine({ name: 'New Routine', startTime: null, items: [], isScheduled: false });
-          setExpandedId(id);
-        }}
+        onPress={() =>
+          addRoutine({ name: "New Routine", items: [], schedule: [] })
+        }
       >
         <Text style={styles.fabLabel}>+</Text>
       </Pressable>
@@ -34,22 +28,18 @@ export default function ManageScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  tabBar: { flexDirection: "row" },
+  container: { flex: 1, position: 'relative' }, // drop "relative?"
   list: { backgroundColor: colors.ground },
-  tab: { flex: 1, paddingVertical: 12, alignItems: "center" },
-  activeTab: { backgroundColor: colors.ground },
-  tabLabel: { ...typography.heading, color: colors.textSecondary },
-  activeTabLabel: { ...typography.heading, color: colors.secondaryGround },
   fab: {
-    ...layout.card,
-    bottom: 100,
+    position: 'absolute',
+    bottom: 24,
+    alignSelf: 'center',
     width: 56,
     height: 56,
     borderRadius: 28,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto" as const,
+    backgroundColor: colors.secondaryGround,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  fabLabel: { fontSize: 32, color: "white" as const, lineHeight: 56 },
+  fabLabel: { fontSize: 32, color: colors.textPrimary, lineHeight: 56 },
 });
