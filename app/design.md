@@ -81,3 +81,6 @@ The runner hook uses a stack-based traversal to handle nested routines:
 - Delete confirmations are stubbed (auto-confirm, just log warnings)
 - No debouncing on AsyncStorage writes (saves on every mutation)
 - No validation on routine item references (will crash if routine is missing from registry)
+
+## constraints on your help:
+- I'm doing styling fully manually. My preferences are kind of esoteric in that regard, so there is no need for you to generate your own styles on new code sections, I will always add it after. Just preserve my existing styles when editing.

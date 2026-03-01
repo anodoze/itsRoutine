@@ -4,8 +4,8 @@ export type RecurrenceRule =
   | { type: 'daily' }
   | { type: 'weekdays'; days: DayOfWeek[] }
   | { type: 'interval'; everyXDays: number; anchorDate: string; strict: boolean }
-  | { type: 'nthWeekday'; day: DayOfWeek; n: number }; // TODO: stub, not yet implemented
-
+  | { type: 'nthWeekday'; day: DayOfWeek; n: number }; // TODO: stub
+  
 export type ScheduleEntry = {
   time: string;           // "HH:MM" 24hr
   recurrence: RecurrenceRule;

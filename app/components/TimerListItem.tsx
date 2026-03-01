@@ -33,5 +33,5 @@ const styles = StyleSheet.create({
   name: { ...typography.heading, flex: 1 },
   durationLabel: { ...typography.body, marginRight: 8 },
   button: { ...layout.button },
-  buttonText: { ...typography.button }
+  buttonText: { ...typography.buttonText }
 });

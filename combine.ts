@@ -20,7 +20,6 @@ const files = [
   "app/RegistryContext.tsx",
   "app/hooks/use-routine-runner.ts",
   "app/Storage.ts",
-  "app/theme.ts",
   "app/utils.ts",
 ];
 

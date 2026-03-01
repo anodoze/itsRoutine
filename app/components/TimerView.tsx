@@ -1,6 +1,6 @@
 import { Button, StyleSheet, Text, View } from "react-native";
+import { useRegistry } from "../_RegistryContext";
 import { useRoutineRunner } from "../hooks/use-routine-runner";
-import { useRegistry } from "../RegistryContext";
 import { colors, layout } from "../theme";
 import { Routine } from "../types";
 
@@ -27,6 +27,7 @@ export default function TimerView({ routine }: TimerViewProps) {
       {secondsLeft !== null && <Text>{secondsLeft}</Text>}
       <View style={styles.buttonRow}>
         <Button
+          
           title={isPaused ? "Start" : "Pause"}
           onPress={() => (isPaused ? resume() : pause())}
         />
@@ -44,4 +45,5 @@ const styles = StyleSheet.create({
     justifyContent: "center" as const,
   },
   buttonRow: { ...layout.row },
+  button: { ...layout.button },
 });

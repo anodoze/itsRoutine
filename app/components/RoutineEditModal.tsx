@@ -2,14 +2,13 @@ import { useState } from "react";
 import {
   Modal,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from "react-native";
 import DragList, { DragListRenderItemInfo } from "react-native-draglist";
-import { useRegistry } from "../RegistryContext";
+import { useRegistry } from "../_RegistryContext";
 import { colors, layout, typography } from "../theme";
 import { Routine, RoutineItem } from "../types";
 import AddItemModal from "./AddItemModal";
@@ -19,9 +18,10 @@ interface Props {
   visible: boolean;
   routine: Routine;
   onClose: () => void;
+  renderRoutine: (id: string) => React.ReactNode;
 }
 
-export default function RoutineEditModal({ visible, routine, onClose }: Props) {
+export default function RoutineEditModal({ visible, routine, onClose, renderRoutine }: Props) {
   const { updateRoutine, deleteRoutine } = useRegistry();
   const [editingName, setEditingName] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,6 +52,7 @@ export default function RoutineEditModal({ visible, routine, onClose }: Props) {
               itemIndex={itemIndex}
               routine={routine}
               depth={0}
+              renderRoutine={renderRoutine}
             />
           </View>
         </Pressable>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   centerModal: { flex: 1, backgroundColor: colors.background },
   modal: { ...layout.modal },
   card: { ...layout.card },
-  cardTitle: { ...typography.title, color: colors.secondaryGround },
+  cardTitle: { ...typography.title, color: colors.secondaryGround,},
   buttonRow: { ...layout.row },
   button: { ...layout.button },
   buttonText: { ...typography.body },

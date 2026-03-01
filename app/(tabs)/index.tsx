@@ -1,10 +1,9 @@
-import { useEffect } from "react";
-import { Button, StyleSheet, View, Text } from "react-native";
-import TimerView from "./components/TimerView";
-import { useRegistry } from "./RegistryContext";
-import { createSeedData } from "./Seed";
 import { useRouter } from 'expo-router';
+import { Button, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRegistry } from "../_RegistryContext";
+import TimerView from "../components/TimerView";
+import { colors } from '../theme';
 
 export default function Index() {
   const router = useRouter();
@@ -22,17 +21,16 @@ export default function Index() {
       ) : (
         <View style={styles.empty}>
           <Text style={styles.emptyText}>No routines yet.</Text>
-          <Button title="Create one" onPress={() => router.push('/components/manage')} />
+          <Button title="Create one" onPress={() => router.navigate('/manage')} />
         </View>
       )}
-      <Button title="Reset Data" onPress={() => seedRegistry(createSeedData())} />
-      <Button title="Manage" onPress={() => router.push('/components/manage')} />
+      {/* <Button title="Reset Data" onPress={() => seedRegistry(createSeedData())} /> */}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor: colors.ground },
   empty: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: 16 },
   emptyText: { fontSize: 18, color: '#888' },
 });

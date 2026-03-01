@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { Routine, Registry } from './types';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { loadRegistry, saveRegistry } from './Storage';
+import { Registry, Routine } from './types';
 
 type RegistryContextValue = {
   registry: Registry;

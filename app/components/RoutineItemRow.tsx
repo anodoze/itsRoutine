@@ -1,9 +1,8 @@
 // app/components/manage/RoutineItemRow.tsx
 import { useState } from "react";
 import { View } from "react-native";
-import { useRegistry } from "../RegistryContext";
+import { useRegistry } from "../_RegistryContext";
 import { Routine, RoutineItem } from "../types";
-import RoutineListItem from "./RoutineListItem";
 import TimerEditModal from "./TimerEditModal";
 import TimerListItem from "./TimerListItem";
 
@@ -12,6 +11,7 @@ interface Props {
   itemIndex: number;
   routine: Routine;
   depth: number;
+  renderRoutine: (routineId: string) => React.ReactNode;
 }
 
 export default function RoutineItemRow({
@@ -19,6 +19,7 @@ export default function RoutineItemRow({
   itemIndex,
   routine,
   depth,
+  renderRoutine,
 }: Props) {
   const { registry, updateRoutine } = useRegistry();
   const [editingTimer, setEditingTimer] = useState(false);
@@ -52,9 +53,5 @@ export default function RoutineItemRow({
 
   const subroutine = registry.routines[item.routineId];
   if (!subroutine) return null;
-  return (
-    <View style={{ paddingLeft: depth * 12 }}>
-      <RoutineListItem routine={subroutine} />
-    </View>
-  );
+  return <View style={{ paddingLeft: depth * 12 }}>{renderRoutine(item.routineId)}</View>;
 }

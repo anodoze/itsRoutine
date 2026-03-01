@@ -1,7 +1,7 @@
 // app/components/manage/AddItemModal.tsx
-import { Modal, View, Text, Pressable, FlatList, StyleSheet } from 'react-native';
-import { useRegistry } from '../RegistryContext';
-import { RoutineItem, Registry } from '../types';
+import { FlatList, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useRegistry } from '../_RegistryContext';
+import { Registry, RoutineItem } from '../types';
 
 interface Props {
   visible: boolean;

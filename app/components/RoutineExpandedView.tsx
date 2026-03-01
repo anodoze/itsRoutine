@@ -1,15 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { layout, typography } from "../theme";
 import { Routine } from "../types";
 import RoutineItemRow from "./RoutineItemRow";
-import { layout, typography } from "../theme";
 
 interface Props {
   routine: Routine;
   onCollapse: () => void;
   onEdit: () => void;
+  renderRoutine: (id: string) => React.ReactNode;
 }
 
-export default function RoutineExpandedView({ routine, onCollapse, onEdit }: Props) {
+export default function RoutineExpandedView({ routine, onCollapse, onEdit, renderRoutine}: Props) {
 
   return (
     <View style={styles.routineCard}>
@@ -29,6 +30,7 @@ export default function RoutineExpandedView({ routine, onCollapse, onEdit }: Pro
             itemIndex={index}
             routine={routine}
             depth={0}
+            renderRoutine={renderRoutine}
           />
       ))}
     </View>
@@ -37,8 +39,8 @@ export default function RoutineExpandedView({ routine, onCollapse, onEdit }: Pro
 
 const styles = StyleSheet.create({
   routineCard: { ...layout.card},
-  routineRow: { ...layout.row },
-  routineHeading: { ...typography.heading, marginBottom: 8},
+  routineRow: { ...layout.row, justifyContent: 'space-between' },
+  routineHeading: { ...typography.heading, marginBottom: 8, },
   editButton: { ...layout.button },
-  editButtonText: { ...typography.button }
+  editButtonText: { ...typography.buttonText }
 })

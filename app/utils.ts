@@ -1,4 +1,3 @@
-// app/utils/formatDuration.ts
 export function formatDuration(s: number): string {
   const h = Math.floor(s / 3600);
   const m = Math.floor((s % 3600) / 60);

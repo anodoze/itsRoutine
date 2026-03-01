@@ -1,16 +1,16 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { useRegistry } from "../RegistryContext";
+import { FlatList, Pressable, StyleSheet, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRegistry } from "../_RegistryContext";
+import RoutineListItem from "../components/RoutineListItem";
 import { colors } from "../theme";
-import RoutineListItem from "./RoutineListItem";
 
 export default function ManageScreen() {
   const { registry, addRoutine } = useRegistry();
   const routines = Object.values(registry.routines);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
-        style={styles.list}
         data={routines}
         keyExtractor={(r) => r.id}
         renderItem={({ item }) => <RoutineListItem routine={item} />}
@@ -23,13 +23,12 @@ export default function ManageScreen() {
       >
         <Text style={styles.fabLabel}>+</Text>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, position: 'relative' }, // drop "relative?"
-  list: { backgroundColor: colors.ground },
+  container: { flex: 1, backgroundColor: colors.ground },
   fab: {
     position: 'absolute',
     bottom: 24,
