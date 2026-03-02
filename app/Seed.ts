@@ -6,8 +6,9 @@ export function createSeedData(): Registry {
       r_morning: {
         id: 'r_morning',
         name: 'Morning Routine',
+        abbreviation: 'MR',
         schedule: [{
-          time: '07:00',
+          startMinutes: 420, // 7:00 AM
           recurrence: { type: 'daily' },
           lastCompleted: null,
         }],
@@ -21,6 +22,7 @@ export function createSeedData(): Registry {
       r_stretch: {
         id: 'r_stretch',
         name: 'Morning Stretch',
+        abbreviation: 'MS',
         schedule: [],
         items: [
           { type: 'timer', timer: { name: 'Neck Rolls', durationSeconds: 6 } },

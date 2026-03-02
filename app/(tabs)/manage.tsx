@@ -18,7 +18,7 @@ export default function ManageScreen() {
       <Pressable
         style={styles.fab}
         onPress={() =>
-          addRoutine({ name: "New Routine", items: [], schedule: [] })
+          addRoutine({ name: "New Routine", abbreviation: "NR", items: [], schedule: [] })
         }
       >
         <Text style={styles.fabLabel}>+</Text>

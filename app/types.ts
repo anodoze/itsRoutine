@@ -3,11 +3,11 @@ export type DayOfWeek = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
 export type RecurrenceRule =
   | { type: 'daily' }
   | { type: 'weekdays'; days: DayOfWeek[] }
-  | { type: 'interval'; everyXDays: number; anchorDate: string; strict: boolean }
+  | { type: 'interval'; everyXDays: number; anchorDate: string; strict: boolean } // TODO: strict will be used for handling skipped days, stub
   | { type: 'nthWeekday'; day: DayOfWeek; n: number }; // TODO: stub
   
 export type ScheduleEntry = {
-  time: string;           // "HH:MM" 24hr
+  startMinutes: number;        // minutes since midnight (0-1439)
   recurrence: RecurrenceRule;
   lastCompleted: string | null;  // "YYYY-MM-DD"
   anchorGroupId?: string; // TODO: stub, ignored until anchor groups are implemented
@@ -21,6 +21,7 @@ export interface TimerData {
 export interface Routine {
   id: string;
   name: string;
+  abbreviation: string;
   items: RoutineItem[];
   schedule: ScheduleEntry[]; 
 }
